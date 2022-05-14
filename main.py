@@ -15,10 +15,13 @@ connections={}
 def openfirewall(addr):
     #open the firewall to addr for 10 seconds
     subprocess.call(["sudo", "iptables", "-A", "INPUT", "-p", "udp", "-s", addr, "--dport", "1000", "-j", "ACCEPT"])
+    print("[+] Firewall opened for", addr)
+    closefirewall(addr)
 
 def closefirewall(addr):
     time.sleep(10)
     subprocess.call(["sudo", "iptables", "-D", "INPUT", "-p", "udp", "-s", addr, "--dport", "1000", "-j", "ACCEPT"])
+    print("[+] Firewall closed")
 
 def listener(port, iter):
     global connections
@@ -29,20 +32,21 @@ def listener(port, iter):
     while True:
         #receive data
         data, addr = s.recvfrom(1024)
+        print(addr)
         if addr not in connections:
             connections[addr] = [0,0,0,0]
             connections[addr][iter] = 1
         #print out the data
         else:
             connections[addr][iter] = 1
-            print("connection from", addr , "on port", port)
-            print(connections[addr])
+        print("connection from", addr , "on port", port)
+        print(connections[addr])
         #check if the address has knocked on all ports
         if sum(connections[addr]) == 4:
             #open the firewall
             openfirewall(addr[0])
-            #remove the address from the list
-            del connections[addr]
+            #reset the address from the list
+            connections[addr] = [0,0,0,0]
 
 def main():
     ports = [1000,2000,3000,4000]
