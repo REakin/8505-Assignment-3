@@ -19,10 +19,16 @@ class MyHandler(FileSystemEventHandler):
             return
         else:
             self.last_mod = datetime.datetime.now()
-
         print(event.event_type)
         if event.event_type == 'modified':
-            print("File modified")
+            #read the new line added to file
+            with open(event.src_path, 'r') as f:
+                lines = f.readlines()
+                if len(lines) > 0:
+                    last_line = lines[-1]
+                    print(last_line)
+                    #parse the line
+                    
 
 
 def main():
