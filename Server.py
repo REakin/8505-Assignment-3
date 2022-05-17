@@ -4,7 +4,6 @@
 import socket
 import sys
 import subprocess
-import libpcap
 from pylibpcap.base import Sniff
 from struct import *
 import socket
@@ -45,7 +44,6 @@ def sniffer():
     print("[+] Sniffing for connections...")
     filter = "port 1000 or port 2000 or port 3000 or port 4000"
     sniffobj = Sniff("wlo1",filters=filter, count=-1, out_file="sniff.pcap")
-    #create non blocking loop
     for plen, t, buf in sniffobj.capture():
         source_addr = socket.inet_ntoa(buf[26:30])
         dest_port = unpack("!H", buf[36:38])[0]

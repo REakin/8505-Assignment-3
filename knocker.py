@@ -50,7 +50,7 @@ def main(target, MAC, command, ports):
     for port in ports:
         print(port)
         scapy.sendp(scapy.Ether(dst=MAC)/scapy.IP(dst=target)/scapy.UDP(dport=port,sport=9000))
-        time.sleep(1.5)
+        time.sleep(1)
     #send command to port 9000
     scapy.sendp(scapy.Ether(dst=MAC)/scapy.IP(dst=target)/scapy.UDP(dport=9000,sport=10000)/cyphertext)
     #read packets on port 9000
